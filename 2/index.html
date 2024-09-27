@@ -1,0 +1,134 @@
+<h1>CS 280A Project 2</h1>
+<h2>Fun with Filters and Frequencies</h2>
+
+<h3>The purpose of this project is to have fun creating common filters and exploring the possibilities of
+    frequencies. In this project the most important thing I learned was how different frequencies affect how 
+    an image looks as well as how to manipulate them to create fun images. 
+</h3>
+
+<h2>Edge Detection</h2>
+<p>Edge detection is an important problem in computer vision. One good way to 
+    solve this problem is to use gradient filters convolved over an image. To achieve 
+    edges in this part, I convolved an image with a derivative filter in the x and y direction, then combined
+    the magnitude of each to get the gradient magnitude image. Binarizing this resulted in the image with only 
+    edges.
+</p>
+<h3>Cameraman convolved with Dx:</h3>
+<img src="media/cameraman_dx.jpg" width="auto" height="500px" alt="church">
+
+<h3>Cameraman convolved with Dy:</h3>
+<img src="media/cameraman_dy.jpg" width="auto" height="500px" alt="church">
+
+<h3>Cameraman gradient magnitude image:</h3>
+<img src="media/gradient_mag.jpg" width="auto" height="500px" alt="church">
+
+<h3>Cameraman gradient magnitude binarized:</h3>
+<img src="media/cameraman_edges.jpg" width="auto" height="500px" alt="church">
+
+<h3>Cameraman gaussian then magnitude binarized:</h3>
+<img src="media/cameraman_smoothed_edges.jpg" width="auto" height="500px" alt="church">
+<p>Differences: the gaussian version of edge detection resulted in both more prominant and 
+    thicker edges. It's easier to make out the shapes in the image. 
+</p>
+
+<h3>Cameraman derivative of gaussian filter in x direction:</h3>
+<img src="media/cameraman_DoG_x.jpg" width="auto" height="500px" alt="church">
+
+<h3>Cameraman derivative of gaussian filter in y direction:</h3>
+<img src="media/cameraman_DoG_y.jpg" width="auto" height="500px" alt="church">
+
+<h3>Cameraman edges using single convolution (Derivative of Gaussian filter):</h3>
+<img src="media/cameraman_edges_d_o_g.jpg" width="auto" height="500px" alt="church">
+<p>This image looks almost identical to the previous gaussian edge image, but the edges are slightly smaller,
+    which could be a result of the chosen threshold or parameters. 
+</p>
+<br>
+<h2>Sharpening</h2>
+<h3>Original dress:</h3>
+<img src="media/dress.jpg" width="auto" height="500px" alt="church">
+
+<h3>Sharpened dress:</h3>
+<img src="media/sharpened_dress.jpg" width="auto" height="500px" alt="church">
+
+<h3>Original Nutmeg:</h3>
+<img src="media/nutmeg.jpg" width="auto" height="500px" alt="church">
+
+<h3>Blurred then sharpened Nutmeg:</h3>
+<img src="media/sharpened_blurred_nutmeg.jpg" width="auto" height="500px" alt="church">
+
+<h2>Hybrid Images</h2>
+
+<h3>Paganini:</h3>
+<img src="media/paganini.jpg" width="auto" height="500px" alt="church">
+
+<h3>Devil:</h3>
+<img src="media/devil.jpg" width="auto" height="500px" alt="church">
+
+<h3>Paganini/Devil:</h3>
+<img src="media/paganini-devil.jpg" width="auto" height="500px" alt="church">
+
+<h3>Paganini/Devil FFT:</h3>
+<img src="media/paganini-devil-fft.jpg" width="auto" height="500px" alt="church">
+<p>Frequency analysis: it seems that a lot of the frequencies were captured 
+    more by the Paganini picture. For instance, the horizontal and vertical lines show prominantly 
+    in the frequency domain as well as the slanted lines corresponding to the bow. The devil picture is more 
+    spread out with it's frequencies.
+</p>
+
+<h3>Happy face:</h3>
+<img src="media/happy.jpg" width="auto" height="500px" alt="church">
+
+<h3>Sad face:</h3>
+<img src="media/sad.jpg" width="auto" height="500px" alt="church">
+
+<h3>Happy/Sad face:</h3>
+<img src="media/happy-sad.jpg" width="auto" height="500px" alt="church">
+<p>This hybrid did not work as well because there isn't as much detail in the low-frequency image. That makes it easier
+    to make out that there is a happy face underneath. 
+</p>
+
+<h2>Multi-resolution Blending and the Oraple journey</h2>
+
+<h3>Orange laplacian level 0:</h3>
+<img src="media/level 0orange.jpg" width="auto" height="500px" alt="church">
+
+<h3>Orange laplacian level 1:</h3>
+<img src="media/level 1orange.jpg" width="auto" height="500px" alt="church">
+
+<h3>Orange laplacian level 2:</h3>
+<img src="media/level 2orange.jpg" width="auto" height="500px" alt="church">
+
+<h3>Orange laplacian level 3:</h3>
+<img src="media/level 3orange.jpg" width="auto" height="500px" alt="church">
+
+<h3>Orange laplacian level 4:</h3>
+<img src="media/level 4orange.jpg" width="auto" height="500px" alt="church">
+
+<h3>Apple laplacian level 0:</h3>
+<img src="media/level 0apple.jpg" width="auto" height="500px" alt="church">
+
+<h3>Apple laplacian level 1:</h3>
+<img src="media/level 1apple.jpg" width="auto" height="500px" alt="church">
+
+<h3>Apple laplacian level 2:</h3>
+<img src="media/level 2apple.jpg" width="auto" height="500px" alt="church">
+
+<h3>Apple laplacian level 3:</h3>
+<img src="media/level 3apple.jpg" width="auto" height="500px" alt="church">
+
+<h3>Apple laplacian level 4:</h3>
+<img src="media/level 4apple.jpg" width="auto" height="500px" alt="church">
+
+<h2>Blending</h2>
+
+<h3>Oraple:</h3>
+<img src="media/oraple.jpg" width="auto" height="500px" alt="church">
+
+<h3>Hippebra:</h3>
+<img src="media/hippebra.jpg" width="auto" height="500px" alt="church">
+
+<h3>Golden gate lava bridge:</h3>
+<img src="media/golden-lava.jpg" width="auto" height="500px" alt="church">
+<p>This one uses an irregular mask, but blending the lava into the water does 
+    not look very convincing. 
+</p>
