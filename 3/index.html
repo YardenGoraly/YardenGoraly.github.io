@@ -1,0 +1,89 @@
+<h1>CS 280A Project 3</h1>
+<h2>Face Morphing</h2>
+<h3>Yarden Goraly</h3>
+
+<h3>In this project we have fun with morphing faces. We do this through defining correspondences for different images and performing different
+    morphs based on these points. To start I created a function to morph the faces of two images with 
+    parameters to choose how much of each face should appear. Later I experimented with a face dataset to 
+    create an average face and some extra warps associated with it. 
+</h3>
+
+<h2>Part 1: Defining Correspondences</h2>
+<h3>In this part I defined correspondences for two images and computed the Delaunay triangulation for
+    each one:
+</h3>
+<img src="media/image1_triangulation.png" width="auto" height="500px" alt="church">
+<img src="media/image2_triangulation.png" width="auto" height="500px" alt="church">
+
+<h2>Part 2: Computing the "Mid-way Face"</h2>
+<h3>In this part I computed the midway face between image 1 and image 2. This process involved first
+    computing the average triangulation for both images. I implemented an affine transformation 
+    function to compute the transform from the image trimeshes to the midpoint mesh. Then for each triangle, I obtain the desired colors 
+    from the original images based on the inverse warp of a polygon from the midpoint mesh. Then I used interpolation
+    to smoothy determine the desired colors. Finally I averaged the desired colors from each original image. 
+</h3>
+<h3>Original image 1:</h3>
+<img src="media/yarden.JPG" width="auto" height="500px" alt="church">
+
+<h3>Original image 2:</h3>
+<img src="media/mahler.jpg" width="auto" height="500px" alt="church">
+
+<h3>Midway face:</h3>
+<img src="media/yarden-mahler.jpg" width="auto" height="500px" alt="church">
+<p>While the face morph itself looks good, there are some artifacts with other parts of the image,
+    such as Mahler's suit. This is because I only took correspondences for the face. To improve this I would 
+    take more correspondences from other parts of the image or crop the original images. 
+</p>
+
+<h2>Part 3: The Morph Sequence</h2>
+<h3>In this part I did the steps from the previous part, but this time in a video form that morphs 
+    from the first original image to the second. 
+</h3>
+<h2>Gif of morph:</h2>
+<img src="media/yarden-mahler.gif" width="auto" height="500px" alt="church">
+
+<h2>Part 4: The "Mean face" of a population</h2>
+<h3>In this part I morphed all the faces in the Danes dataset into one average face.</h3>
+
+<h2>Here are some of the intermediate faces that are warped to the average shape:</h2>
+<img src="media/morphed_danes_face_0.jpg" width="auto" height="500px" alt="church">
+<img src="media/morphed_danes_face_16.jpg" width="auto" height="500px" alt="church">
+<img src="media/morphed_danes_face_24.jpg" width="auto" height="500px" alt="church">
+<img src="media/morphed_danes_face_32.jpg" width="auto" height="500px" alt="church">
+
+
+
+
+<h2>Average face:</h2>
+<img src="media/average_face.jpg" width="auto" height="500px" alt="church">
+
+<h2>My face warped into average face geometry:</h2>
+<img src="media/yarden_warped_to_average_geometry.jpg" width="auto" height="500px" alt="church">
+
+<h2>Average face warped into my face's geometry:</h2>
+<img src="media/average_face_warped_to_yarden_geometry.jpg" width="auto" height="500px" alt="church">
+
+<h2>Part 5: Caricatures: Extrapolating from the mean</h2>
+<h3>In this part, I created a caricature of my face using the following method: I did a weighted average 
+    of the correspondence points in my face and the average face generated in the previous part. My hyperparameter 
+    is alpha, and I multiplied the points for the average image by alpha and the points for my image by (1 - alpha). Then 
+    I set alpha to -1 and 2 to extrapolate features. 
+</h3>
+
+<h2>Caricature with alpha = -1:</h2>
+<img src="media/yarden_caricature_alpha_-1.jpg" width="auto" height="500px" alt="church">
+
+<h2>Caricature with alpha = 2:</h2>
+<img src="media/yarden_caricature_alpha_2.jpg" width="auto" height="500px" alt="church">
+
+<h2>Bells and Whistles:</h2>
+<h3>I experimented with changing how the picture of my face looks using an average face of just 
+    the females in the Danes dataset. I created three pictures. The first is my face warped into the average 
+    female face geometry. The second favors the appearance of the average female face on my face's geometry. The 
+    last picture combines both of these. 
+</h3>
+
+<img src="media/yarden_female_shape.jpg" width="auto" height="500px" alt="church">
+<img src="media/yarden_female_appearance.jpg" width="auto" height="500px" alt="church">
+<img src="media/yarden_female_both.jpg" width="auto" height="500px" alt="church">
+
