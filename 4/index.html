@@ -1,0 +1,101 @@
+<h1>CS 280A Project 4</h1>
+<h2>Image warping and mosaicing</h2>
+<h3>Yarden Goraly</h3>
+
+<h3>Part A:
+</h3>
+
+<h2>Part 1: Shoot the pictures</h2>
+<h3>Here are the images I used for this project:
+</h3>
+<img src="media/robot.jpg" width="auto" height="500px" alt="church">
+<br>
+<img src="media/1.jpg" width="auto" height="300px" alt="church">
+<img src="media/2.jpg" width="auto" height="300px" alt="church">
+<img src="media/3.jpg" width="auto" height="300px" alt="church">
+<br>
+<img src="media/sdh1.jpg" width="auto" height="300px" alt="church">
+<img src="media/sdh2.jpg" width="auto" height="300px" alt="church">
+<img src="media/sdh3.jpg" width="auto" height="300px" alt="church">
+<br>
+<img src="media/west1.jpg" width="auto" height="300px" alt="church">
+<img src="media/west2.jpg" width="auto" height="300px" alt="church">
+<img src="media/west3.jpg" width="auto" height="300px" alt="church">
+
+<h2>Part 2: Recover homographies</h2>
+<p>The first step to create homographies is to have correspondence points between images. Below 
+    are two sets of images with their corresponding points. 
+</p>
+<img src="media/plot1.png" width="auto" height="300px" alt="church">
+<img src="media/plot2.png" width="auto" height="300px" alt="church">
+<br>
+<img src="media/plot3.png" width="auto" height="300px" alt="church">
+<img src="media/plot4.png" width="auto" height="300px" alt="church">
+
+<p>To calculate the homography matrix, the steps are below:</p>
+<img src="media/homography.jpg" width="auto" height="700px" alt="church">
+<p>We can stack these 2x8 matrices up according to how many points we have and then use least squares 
+    to solve for a-h. It's important to note that in order to have a determined system, we need at least four points.<p>
+<p>The following sections show homographies in action, as our calculated H is used to provide the warp for the 
+    remainder of this project. 
+</p>
+<h2>Part 3: Warp the images</h2>
+<p>For this section I developed a warp function and used it to rectify images. The warp function works like this:
+    First use a forward warp on the original border of the image to get the warped border. Then use that border to obtain 
+    a polygon of the warped points. Obtain a derived original image points by inverse warping the warped polygon. Then define the 
+    coordinates of the new image. It's important to make sure that the entire warped image fits within the frame. Finally, interpolate
+    the colors from the original image into the warped image.
+</p>
+<br>
+<h2>Part 4: Image rectification</h2>
+<p>The rectification results are shown below:</p>
+
+<img src="media/robot_rectify.jpg" width="auto" height="300px" alt="church">
+<img src="media/tv_rectify.jpg" width="auto" height="300px" alt="church">
+
+<p>To obtain these rectifications, I manually found points for objects that I know are rectangles (in this 
+    case, the monitor and tv respectively) and I created my own points that are a rectantly. Finally I found the transformation
+    between these two and warped the image to the rectangular points. 
+</p>
+<h2>Part 5: Blend the images into a mosaic</h2>
+<p>In this part I combine three photos taken at similar but slightly different angles into one panorama. 
+I used the following method: Warp the first image into the chosen correspondence points of the second image. Then 
+calculate the necessary size of the frame to fit both images. Then blend the images together to smooth the seam. Then repeat 
+this but with the combined first and second images warped to the shape of the third image.
+</p>
+<br>
+<p>More on blending: in order to blend I first used scipy.ndimage.morphology.distance_transform_edt to 
+    create a mask of each image in which the value of the pixel is a function of its Euclidean distance to the nearest background.
+    Then I used these masks to create a single mask representing where the distance to an edge of each pixel in the first image is greater 
+    than that of the second.
+    Finally I used a 2-step laplacian pyramid as in project 2 to combine the two images into one. 
+</p>
+<h3>Examples of some masks: </h3>
+<img src="media/dist1.jpg" width="auto" height="300px" alt="church">
+<img src="media/dist2.jpg" width="auto" height="300px" alt="church">
+<p>Mask:</p>
+<img src="media/mask.jpg" width="auto" height="300px" alt="church">
+
+<h3>Results:</h3>
+<p>Original:</p>
+<img src="media/1.jpg" width="auto" height="300px" alt="church">
+<img src="media/2.jpg" width="auto" height="300px" alt="church">
+<img src="media/3.jpg" width="auto" height="300px" alt="church">
+<p>Stitched:</p>
+<img src="media/living_room_rectify.jpg" width="auto" height="300px" alt="church">
+<p>Original:</p>
+<img src="media/sdh1.jpg" width="auto" height="300px" alt="church">
+<img src="media/sdh2.jpg" width="auto" height="300px" alt="church">
+<img src="media/sdh3.jpg" width="auto" height="300px" alt="church">
+<p>Stitched:</p>
+<img src="media/newton_panorama.jpg" width="auto" height="300px" alt="church">
+<p>Original:</p>
+<img src="media/west1.jpg" width="auto" height="300px" alt="church">
+<img src="media/west2.jpg" width="auto" height="300px" alt="church">
+<img src="media/west3.jpg" width="auto" height="300px" alt="church">
+<p>Stitched:</p>
+<img src="media/west_side_panorama.jpg" width="auto" height="300px" alt="church">
+
+
+
+
