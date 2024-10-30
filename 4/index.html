@@ -2,8 +2,8 @@
 <h2>Image warping and mosaicing</h2>
 <h3>Yarden Goraly</h3>
 
-<h3>Part A:
-</h3>
+<h1>Part A:
+</h1>
 
 <h2>Part 1: Shoot the pictures</h2>
 <h3>Here are the images I used for this project:
@@ -97,5 +97,79 @@ this but with the combined first and second images warped to the shape of the th
 <img src="media/west_side_panorama.jpg" width="auto" height="300px" alt="church">
 
 
+<h1>Part B: </h1>
+<h2>In this part of the project, we stitch images into panoramas just like part A, but without 
+    manually defining correspondences.
+</h2>
 
+<h2>Detecting corners:</h2>
+<p>To detect corners, we find the Harris matrix, which reflects how much each pixel is affected 
+    by changes in the horizontal and vertical direction. Once we have the Harris matrix, we find the peaks and use 
+    those as the interest points. 
+</p>
+<h3>Here's an example of the interest points found using the Harris matrix:</h3>
+<img src="media/harris_points_west.png" width="auto" height="300px" alt="church">
 
+<h2>Adaptive Non-maximal Suppression (ANMS)</h2>
+<p>One issue with the Harris interest points as is is that some of them are clumped up close together. 
+    This gives redundant information that also make it slower to find matches down the line. To reduce the number 
+    of points while also keeping reasonable spread, we implement adaptive non-maximal supression. 
+</p>
+<br>
+<p>
+    To implement this, I first found r_i for every point x_i where r_i is the minimum distance between x_i and another interest 
+    point that is strong enough (strong enough meaning c_robust(new_point) > x_i, where c_robust is a tunable parameter).
+    Finally, I took the n points with the largest r_i where n is the number of desired unsupressed points. Below is the 
+    same image as above but with ANMS:
+</p>
+<img src="media/anms_west.png" width="auto" height="300px" alt="church">
+
+<h2>Feature Descriptor Extraction</h2>
+<p>In order to match points from one image to another, we have to extract features from each point. To do this, 
+    I created 8x8 feature patches for each point that is a sample from a 40x40 patch of the image, which is blurred to 
+    prevent anti-aliasing. Here's an example of a single patch:
+</p>
+<img src="media/feature_patch_west.jpg" width="auto" height="200px" alt="church">
+
+<h2>Feature Matching</h2>
+<p>In order to match our points to each other, I first calculate the feature distance from each point to all other
+    points where the feature distance is the L2 distance between patches. Then I sort the neighbors by feature distance
+    and calculate the Lowe ratio between the closest nearest neighbor and the second closes nearest neighbor. Then if the Lowe 
+    ratio is below a certain threshold, I add the point and its nearest neighbor to a list of matches.
+    Here's an example of matched points: 
+</p>
+<img src="media/matches_sdh copy.png" width="auto" height="500px" alt="church">
+
+<h2>RANSAC</h2>
+<p>I've found that usually the correspondences with just the matching procedure above are good, but sometimes 
+    if there are multiple features that look similar, there will be an incorrect match. To fix this, I implemented 
+    RANSAC which, for each iteration, finds four random matches and computes an exact homography between them. Then for each 
+    matching point, if the distance between the original point in one image and the transformed point in the other is less than 
+    epsilon, that correspondence is considered an inlier, and is added to a list. I keep track of the list with the largest inliers, 
+    and the largest list of inliers by the end of the loop is returned. Below is an example result after RANSAC:
+</p>
+<img src="media/ransac_matches_sdh copy.png" width="auto" height="500px" alt="church">
+<h2>Final Panorama Results</h2>
+<p>Finally, using the correspondences from the output of RANSAC, I repeat the steps from the end of part A to stitch 
+    three images together. Below are the results for each of my sets of images.
+</p>
+<h3>Manual:</h3>
+<img src="media/living_room_rectify.jpg" width="auto" height="300px" alt="church">
+<h3>Automatic:</h3>
+<img src="media/living_room_panorama_part_B.jpg" width="auto" height="300px" alt="church">
+<br>
+<h3>Manual:</h3>
+<img src="media/newton_panorama.jpg" width="auto" height="300px" alt="church">
+<h3>Automatic:</h3>
+<img src="media/sdh_panorama_part_B.jpg" width="auto" height="300px" alt="church">
+<br>
+<h3>Manual:</h3>
+<img src="media/west_side_panorama.jpg" width="auto" height="300px" alt="church">
+<h3>Automatic:</h3>
+<img src="media/west_side_panorama_part_B.jpg" width="auto" height="300px" alt="church">
+<br>
+<p>The coolest thing I learned in this project was how to match correspondence automatically. 
+    I know this was the whole point of part B, but I know it's a big problem in computer vision to 
+    figure out how an object in one image relates to that same object in a different image, from a different angle.
+    This project gived me a glimpse at one way to do that, at least when the perspective center is constant. 
+</p>
