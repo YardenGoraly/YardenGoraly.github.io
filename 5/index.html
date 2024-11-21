@@ -21,24 +21,24 @@
     "a rocket ship"
 </p>
 <p>Stage 1 outputs (num_inference_steps = 10):</p>
-<img src="media/part0_small_n=20_78.jpg" width="auto" height="64px" alt="church">
-<img src="media/part0_small_n=20_51.jpg" width="auto" height="64px" alt="church">
-<img src="media/part0_small_n=20_53.jpg" width="auto" height="64px" alt="church">
+<img src="part0_small_n=20_78.jpg" width="auto" height="64px" alt="church">
+<img src="part0_small_n=20_51.jpg" width="auto" height="64px" alt="church">
+<img src="part0_small_n=20_53.jpg" width="auto" height="64px" alt="church">
 
 <p>Stage 2 outputs (num_inference_steps = 10):</p>
-<img src="media/part0_big_n=20_68.jpg" width="auto" height="200px" alt="church">
-<img src="media/part0_big_n=20_23.jpg" width="auto" height="200px" alt="church">
-<img src="media/part0_big_n=20_12.jpg" width="auto" height="200px" alt="church">
+<img src="part0_big_n=20_68.jpg" width="auto" height="200px" alt="church">
+<img src="part0_big_n=20_23.jpg" width="auto" height="200px" alt="church">
+<img src="part0_big_n=20_12.jpg" width="auto" height="200px" alt="church">
 
 <p>Stage 1 outputs (num_inference_steps = 200):</p>
-<img src="media/part0_small_n=200_95.jpg" width="auto" height="64px" alt="church">
-<img src="media/part0_small_n=200_68.jpg" width="auto" height="64px" alt="church">
-<img src="media/part0_small_n=200_93.jpg" width="auto" height="64px" alt="church">
+<img src="part0_small_n=200_95.jpg" width="auto" height="64px" alt="church">
+<img src="part0_small_n=200_68.jpg" width="auto" height="64px" alt="church">
+<img src="part0_small_n=200_93.jpg" width="auto" height="64px" alt="church">
 
 <p>Stage 1 outputs (num_inference_steps = 200):</p>
-<img src="media/part0_big_n=200_98.jpg" width="auto" height="200px" alt="church">
-<img src="media/part0_big_n=200_88.jpg" width="auto" height="200px" alt="church">
-<img src="media/part0_big_n=200_46.jpg" width="auto" height="200px" alt="church">
+<img src="part0_big_n=200_98.jpg" width="auto" height="200px" alt="church">
+<img src="part0_big_n=200_88.jpg" width="auto" height="200px" alt="church">
+<img src="part0_big_n=200_46.jpg" width="auto" height="200px" alt="church">
 
 <p>
 Discussion: <br>
@@ -58,7 +58,7 @@ the model was trying to render deer, but the details are a bit off.
     Our first step to implement the diffusion loop is to create the forward process 
     which adds noise to an image. For this we compute the following:
 </p>
-<img src="media/Screenshot 2024-11-17 at 10.17.42 PM.png" width="auto" height="64px" alt="church">
+<img src="Screenshot 2024-11-17 at 10.17.42 PM.png" width="auto" height="64px" alt="church">
 <p>
     Where: <br>
     -x_t is the noisy image <br>
@@ -68,30 +68,30 @@ the model was trying to render deer, but the details are a bit off.
 </p>
 <p>Below are results of the forward process on different levels of t.</p>
 <p>Original:</p>
-<img src="media/part1_1-4_12.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_12.jpg" width="auto" height="100px" alt="church">
 <p>t = 250:</p>
-<img src="media/part1_1-4_71.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_71.jpg" width="auto" height="100px" alt="church">
 <p>t = 500:</p>
-<img src="media/part1_1-4_61.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_61.jpg" width="auto" height="100px" alt="church">
 <p>t = 750:</p>
-<img src="media/part1_1-4_19.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_19.jpg" width="auto" height="100px" alt="church">
 <h3>1.2: Classical Denoising</h3>
 <p>Since noise is primarily made up of high frequencies, one way to denoise 
     without learning is to remove the high requiencies from the image.
     We achieve this by applying a gaussian filter to the image.
 </p>
 <p>Noisy t = 250:</p>
-<img src="media/part1_1-4_71.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_71.jpg" width="auto" height="100px" alt="church">
 <p>Smoothed t = 250:</p>
-<img src="media/part1_1-4_59.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_59.jpg" width="auto" height="100px" alt="church">
 <p>Noisy t = 500:</p>
-<img src="media/part1_1-4_61.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_61.jpg" width="auto" height="100px" alt="church">
 <p>Smoothed t = 500:</p>
-<img src="media/part1_1-4_69.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_69.jpg" width="auto" height="100px" alt="church">
 <p>Noisy t = 750:</p>
-<img src="media/part1_1-4_19.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_19.jpg" width="auto" height="100px" alt="church">
 <p>Smoothed t = 750:</p>
-<img src="media/part1_1-4_18.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_18.jpg" width="auto" height="100px" alt="church">
 <p>Clearly, this naive smoothing does not do a very good job. While the 
     noise is smoothed out somewhat, the picture is also blurred, so we 
     lose a lot of information. In the next step we will investigate a better way. 
@@ -104,19 +104,19 @@ the model was trying to render deer, but the details are a bit off.
 </p>
 <p>Here's the original image for reference:</p>
 <p>Original:</p>
-<img src="media/part1_1-4_12.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_12.jpg" width="auto" height="100px" alt="church">
 <p>Noisy t = 250:</p>
-<img src="media/part1_1-4_71.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_71.jpg" width="auto" height="100px" alt="church">
 <p>Smoothed t = 250:</p>
-<img src="media/part1_1-4_8.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_8.jpg" width="auto" height="100px" alt="church">
 <p>Noisy t = 500:</p>
-<img src="media/part1_1-4_61.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_61.jpg" width="auto" height="100px" alt="church">
 <p>Smoothed t = 500:</p>
-<img src="media/part1_1-4_39.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_39.jpg" width="auto" height="100px" alt="church">
 <p>Noisy t = 750:</p>
-<img src="media/part1_1-4_19.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_19.jpg" width="auto" height="100px" alt="church">
 <p>Smoothed t = 750:</p>
-<img src="media/part1_1-4_86.jpg" width="auto" height="100px" alt="church">
+<img src="part1_1-4_86.jpg" width="auto" height="100px" alt="church">
 <h3>1.4: Iterative Denoising</h3>
 <p>Single-step denoising works pretty well. However, it turns out we can get better 
     results by iteratively denoising an image. This involves remove a little bit of noise 
@@ -126,23 +126,23 @@ the model was trying to render deer, but the details are a bit off.
     clean image.
 </p>
 <p>Noisy Campanile t = 690:</p>
-<img src="media/iterative__449.jpg" width="auto" height="100px" alt="church">
+<img src="iterative__449.jpg" width="auto" height="100px" alt="church">
 <p>Noisy Campanile t = 540:</p>
-<img src="media/iterative__94.jpg" width="auto" height="100px" alt="church">
+<img src="iterative__94.jpg" width="auto" height="100px" alt="church">
 <p>Noisy Campanile t = 390:</p>
-<img src="media/iterative__275.jpg" width="auto" height="100px" alt="church">
+<img src="iterative__275.jpg" width="auto" height="100px" alt="church">
 <p>Noisy Campanile t = 240:</p>
-<img src="media/iterative__330.jpg" width="auto" height="100px" alt="church">
+<img src="iterative__330.jpg" width="auto" height="100px" alt="church">
 <p>Noisy Campanile t = 90:</p>
-<img src="media/iterative__278.jpg" width="auto" height="100px" alt="church">
+<img src="iterative__278.jpg" width="auto" height="100px" alt="church">
 <p>Original Campanile:</p>
-<img src="media/part1_1-4_12.jpg" width="auto" height="100px" alt="church">
+<img src=" part1_1-4_12.jpg" width="auto" height="100px" alt="church">
 <p>Iteratively Denoised Campanile:</p>
-<img src="media/iterative__160.jpg" width="auto" height="100px" alt="church">
+<img src="iterative__160.jpg" width="auto" height="100px" alt="church">
 <p>One-step Denoised Campanile:</p>
-<img src="media/iterative__354.jpg" width="auto" height="100px" alt="church">
+<img src="iterative__354.jpg" width="auto" height="100px" alt="church">
 <p>Gaussian Blurred Campanile:</p>
-<img src="media/iterative__21.jpg" width="auto" height="100px" alt="church">
+<img src="iterative__21.jpg" width="auto" height="100px" alt="church">
 <h3>1.5: Diffusion Model Sampling</h3>
 <p>In this part we perform the same exact operations as the previous section, but 
     this time we start with pure noise. That means we don't control what the output 
@@ -150,11 +150,11 @@ the model was trying to render deer, but the details are a bit off.
     image manifold, making for interesting results.
 </p>
 <p>Below are five sampled images:</p>
-<img src="media/part1_5_130.jpg" width="auto" height="200px" alt="church">
-<img src="media/part1_5_30.jpg" width="auto" height="200px" alt="church">
-<img src="media/part1_5_153.jpg" width="auto" height="200px" alt="church">
-<img src="media/part1_5_243.jpg" width="auto" height="200px" alt="church">
-<img src="media/part1_5_358.jpg" width="auto" height="200px" alt="church">
+<img src="part1_5_130.jpg" width="auto" height="200px" alt="church">
+<img src="part1_5_30.jpg" width="auto" height="200px" alt="church">
+<img src="part1_5_153.jpg" width="auto" height="200px" alt="church">
+<img src="part1_5_243.jpg" width="auto" height="200px" alt="church">
+<img src="part1_5_358.jpg" width="auto" height="200px" alt="church">
 <p>We can see that some of these images look like they could be real, but 
     some of them also look unconvincing. In the next part we'll work to improve these.
 </p>
@@ -163,42 +163,42 @@ the model was trying to render deer, but the details are a bit off.
     do this by computing a conditional and an unconditional noise estimate and allowing our new 
     formula to be:
 </p>
-<img src="media/Screenshot 2024-11-20 at 9.26.59 PM.png" width="auto" height="40px" alt="church">
+<img src="Screenshot 2024-11-20 at 9.26.59 PM.png" width="auto" height="40px" alt="church">
 <p>Where epsilon_u and epsilon_c are the estimated noise for the unconditional prompt
     and the conditional prompt respectively. Gamma is a hyperparameter that we can control. To get the conditional 
     and unconditional estimates, we get the output of the UNet for both a given prompt and an empty prompt. With a gamma 
     value greater than 1, we see increased quality for generated images. For this project I used gamma=7.
     Below are five sampled images using CFG.
 </p>
-<img src="media/part1_6_23.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_6_255.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_6_316.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_6_387.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_6_416.jpg" width="auto" height="150px" alt="church">
+<img src="part1_6_23.jpg" width="auto" height="150px" alt="church">
+<img src="part1_6_255.jpg" width="auto" height="150px" alt="church">
+<img src="part1_6_316.jpg" width="auto" height="150px" alt="church">
+<img src="part1_6_387.jpg" width="auto" height="150px" alt="church">
+<img src="part1_6_416.jpg" width="auto" height="150px" alt="church">
 <p>Clearly these results are much higher quality when compared to section 1.5. </p>
 <h3>1.7: Image-to-image Translation</h3>
 <p>In this part we generate images in the same way we did in the previous part,
     but this time starting at different noise levels following the SDEdit algorithm. What we see is a relatively 
     smooth transition from a fully made up image to the Campanile, which is our inputed image.
 </p>
-<img src="media/part1_7_347.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_7_159.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_7_329.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_7_346.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_7_195.jpg" width="auto" height="150px" alt="church">
-<img src="media/part1_7_174.jpg" width="auto" height="150px" alt="church">
+<img src="part1_7_347.jpg" width="auto" height="150px" alt="church">
+<img src="part1_7_159.jpg" width="auto" height="150px" alt="church">
+<img src="part1_7_329.jpg" width="auto" height="150px" alt="church">
+<img src="part1_7_346.jpg" width="auto" height="150px" alt="church">
+<img src="part1_7_195.jpg" width="auto" height="150px" alt="church">
+<img src="part1_7_174.jpg" width="auto" height="150px" alt="church">
 <h3>1.7.1: Editing Hand-Drawn and Web Images</h3>
 <p>In this part, we apply the same steps as before, but on non-realistic images to see how 
     the model transition into the real-image manifold.
 </p>
 <p>Spongebob:</p>
-<img src="media/Screenshot 2024-11-20 at 11.05.56 PM.png" width="auto" height="150px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.05.56 PM.png" width="auto" height="150px" alt="church">
 
 <p>Drawing of a flute:</p>
-<img src="media/Screenshot 2024-11-20 at 11.12.39 PM.png" width="auto" height="150px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.12.39 PM.png" width="auto" height="150px" alt="church">
 
 <p>Drawing of a baby:</p>
-<img src="media/Screenshot 2024-11-20 at 11.15.15 PM.png" width="auto" height="150px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.15.15 PM.png" width="auto" height="150px" alt="church">
 
 
 <h3>1.7.2: Inpainting</h3>
@@ -207,18 +207,18 @@ the model was trying to render deer, but the details are a bit off.
     blocking the top of the Campanile and allow the model to replace it with something else.
 </p>
 <p>Campanile:</p>
-<img src="media/Screenshot 2024-11-20 at 11.30.32 PM.png" width="auto" height="100px" alt="church">
-<img src="media/Screenshot 2024-11-20 at 11.31.03 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.30.32 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.31.03 PM.png" width="auto" height="100px" alt="church">
 
 
 
 <p>Superman:</p>
-<img src="media/Screenshot 2024-11-20 at 11.28.46 PM.png" width="auto" height="100px" alt="church">
-<img src="media/Screenshot 2024-11-20 at 11.29.43 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.28.46 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.29.43 PM.png" width="auto" height="100px" alt="church">
 
 <p>Violinist:</p>
-<img src="media/Screenshot 2024-11-20 at 11.32.21 PM.png" width="auto" height="100px" alt="church">
-<img src="media/Screenshot 2024-11-20 at 11.32.51 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.32.21 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.32.51 PM.png" width="auto" height="100px" alt="church">
 
 <h3>1.7.3: Text-Conditional Image-to-image Translation</h3>
 <p>In this part we do the same as before, but with a text prompt other than "a high quality image" for the conditional prompt. 
@@ -226,38 +226,38 @@ the model was trying to render deer, but the details are a bit off.
 </p>
 
 <p>Prompt: "a rocket ship"</p>
-<img src="media/Screenshot 2024-11-20 at 11.43.12 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.43.12 PM.png" width="auto" height="100px" alt="church">
 
 <p>Promp: "a photo of a dog"</p>
-<img src="media/Screenshot 2024-11-20 at 11.42.20 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.42.20 PM.png" width="auto" height="100px" alt="church">
 
 <p>Prompt: "a pencil"</p>
-<img src="media/Screenshot 2024-11-20 at 11.41.10 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.41.10 PM.png" width="auto" height="100px" alt="church">
 
 <h3>1.8: Visual Anagrams</h3>
 <p>In this part, we make the model generate two images at the same time with one of them being 
     flipped. Combining their noise profiles, we're able to generate images that are anagrams. The 
     formula is as follows:
 </p>
-<img src="media/Screenshot 2024-11-20 at 11.45.04 PM.png" width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.45.04 PM.png" width="auto" height="200px" alt="church">
 <p>Essentially we run our iterative CFG method as before, but with two images at the same time. One of the images
     is flipped then fed into the model to get a flipped noise estimate. Once we average the noise estimates
     from the outputs of each model we can feed the estimated clean image to the next iteration.
 </p>
 
 <p>"an oil painting of people around a campfire" and "an oil painting of an old man"</p>
-<img src="media/Screenshot 2024-11-20 at 11.46.51 PM.png" width="auto" height="200px" alt="church">
-<img src="media/Screenshot 2024-11-20 at 11.46.51 PM.png" style="transform: scaleY(-1)" width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.46.51 PM.png" width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.46.51 PM.png" style="transform: scaleY(-1)" width="auto" height="200px" alt="church">
 
 
 <p>"a lithograph of waterfalls" and "a photo of a dog"</p>
-<img src="media/Screenshot 2024-11-20 at 11.49.06 PM.png" width="auto" height="200px" alt="church">
-<img src="media/Screenshot 2024-11-20 at 11.49.06 PM.png" style="transform: scaleY(-1)" width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.49.06 PM.png" width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.49.06 PM.png" style="transform: scaleY(-1)" width="auto" height="200px" alt="church">
 
 
 <p>"an oil painting of a snowy mountain village" and "a lithograph of a skull"</p>
-<img src="media/Screenshot 2024-11-20 at 11.53.39 PM.png" width="auto" height="200px" alt="church">
-<img src="media/Screenshot 2024-11-20 at 11.53.39 PM.png" style="transform: scaleY(-1)"width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.53.39 PM.png" width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.53.39 PM.png" style="transform: scaleY(-1)"width="auto" height="200px" alt="church">
 
 
 <h3>1.9: Hybrid Images</h3>
@@ -268,13 +268,13 @@ the model was trying to render deer, but the details are a bit off.
     then the final noise estimate is the sum of the low-passed first image and high-passed second image.
 </p>
 <p>Prompts: "a lithograph of waterfalls" and "a lithograph of a skull"</p>
-<img src="media/Screenshot 2024-11-20 at 11.58.00 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.58.00 PM.png" width="auto" height="100px" alt="church">
 
 <p>Prompts: "a rocket ship" and "a photo of a hipster barista"</p>
-<img src="media/Screenshot 2024-11-21 at 1.35.53 AM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-21 at 1.35.53 AM.png" width="auto" height="100px" alt="church">
 
 <p>Prompts: "a man wearing a hat" and "a lithograph of a fjord"</p>
-<img src="media/Screenshot 2024-11-21 at 1.40.29 AM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-21 at 1.40.29 AM.png" width="auto" height="100px" alt="church">
 
 
 
@@ -283,24 +283,24 @@ the model was trying to render deer, but the details are a bit off.
 <h2>Part 1: Training the UNet</h2>
 <h3>1.1: Implementing the UNet</h3>
 <p>In this part I implemented the UNet as per the spec:</p>
-<img src="media/Screenshot 2024-11-20 at 9.47.56 PM.png" width="auto" height="400px" alt="church">
+<img src="Screenshot 2024-11-20 at 9.47.56 PM.png" width="auto" height="400px" alt="church">
 <p>Where some of the operations are detailed below:</p>
-<img src="media/Screenshot 2024-11-20 at 9.48.45 PM.png" width="auto" height="400px" alt="church">
+<img src="Screenshot 2024-11-20 at 9.48.45 PM.png" width="auto" height="400px" alt="church">
 <h3>1.2: Using the UNet to Traing a Denoiser</h3>
 <p>In this part I visualize the forward process of different images at different levels of sigma.
     Below, for each number, I show the noise progression from sigma = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]
     from left to right.
 </p>
-<img src="media/Screenshot 2024-11-20 at 9.55.15 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 9.55.15 PM.png" width="auto" height="100px" alt="church">
 <br>
-<img src="media/Screenshot 2024-11-20 at 9.55.29 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 9.55.29 PM.png" width="auto" height="100px" alt="church">
 <br>
-<img src="media/Screenshot 2024-11-20 at 9.55.51 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 9.55.51 PM.png" width="auto" height="100px" alt="church">
 <br>
 <br>
-<img src="media/Screenshot 2024-11-20 at 9.56.01 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 9.56.01 PM.png" width="auto" height="100px" alt="church">
 <br>
-<img src="media/Screenshot 2024-11-20 at 9.56.11 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 9.56.11 PM.png" width="auto" height="100px" alt="church">
 <h3>1.2.1: Training</h3>
 <p>Now we actually train the UNet to denoise MNIST images. We train the model 
     to denoise images with only noise level sigma=0.5. I used a batch size of 256 and a learning
@@ -308,31 +308,31 @@ the model was trying to render deer, but the details are a bit off.
     on the difference between the output of our model to a clean image. The hidden dimension was 128. Below is a training
     loss curve for five epochs:
 </p>
-<img src="media/Screenshot 2024-11-20 at 10.19.23 PM.png" width="auto" height="400px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.19.23 PM.png" width="auto" height="400px" alt="church">
 <p>Here are results after one epoch:</p>
 <p>Input images:</p>
-<img src="media/Screenshot 2024-11-20 at 10.14.33 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.14.33 PM.png" width="auto" height="100px" alt="church">
 <p>Noisy images:</p>
-<img src="media/Screenshot 2024-11-20 at 10.15.36 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.15.36 PM.png" width="auto" height="100px" alt="church">
 <p>Denoised:</p>
-<img src="media/Screenshot 2024-11-20 at 10.16.11 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.16.11 PM.png" width="auto" height="100px" alt="church">
 
 <p>Here are results after five epochs:</p>
 <p>Input images:</p>
-<img src="media/Screenshot 2024-11-20 at 10.20.14 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.20.14 PM.png" width="auto" height="100px" alt="church">
 <p>Noisy images:</p>
-<img src="media/Screenshot 2024-11-20 at 10.20.47 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.20.47 PM.png" width="auto" height="100px" alt="church">
 <p>Denoised:</p>
-<img src="media/Screenshot 2024-11-20 at 10.21.10 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.21.10 PM.png" width="auto" height="100px" alt="church">
 <p>We see that after five epochs, there is more noise removed and the numbers are clearer</p>
 
 
 <h3>1.2.2: Out-of-Distribution Testing</h3>
 <p>Here we test our denoising on other levels of sigma besides 0.5.</p>
 <p>From left to right are results at sigma (noise) levels [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]</p>
-<img src="media/Screenshot 2024-11-20 at 10.22.50 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.22.50 PM.png" width="auto" height="100px" alt="church">
 <br>
-<img src="media/Screenshot 2024-11-20 at 10.23.56 PM.png" width="auto" height="100px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.23.56 PM.png" width="auto" height="100px" alt="church">
 
 <h2>Part 2: Training a Diffusion Model</h2>
 <p>In this part I train a diffusion model that generates new MNIST images from random noise.</p>
@@ -343,25 +343,25 @@ the model was trying to render deer, but the details are a bit off.
     and add them into our original model. This effectively injects our scalar time, t, into model, 
     allowing for it to learn how to parameterize a time encoding. Below are the diagrams for the modified network.
 </p>
-<img src="media/Screenshot 2024-11-20 at 10.30.27 PM.png" width="auto" height="400px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.30.27 PM.png" width="auto" height="400px" alt="church">
 <p>Where the structure of an FCBlock is below:</p>
-<img src="media/Screenshot 2024-11-20 at 10.31.12 PM.png" width="auto" height="150px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.31.12 PM.png" width="auto" height="150px" alt="church">
 
 <h3>2.2: Training the UNet</h3>
 <p>In order to train the UNet we use the algorithm below:</p>
-<img src="media/Screenshot 2024-11-20 at 10.33.53 PM.png" width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.33.53 PM.png" width="auto" height="200px" alt="church">
 <p>In training, I used a batch size of 128 and a hidden dimension of 64. The learning rate was 0.001
     with a learning rate scheduler, decaying the rate by 1.0^(1.0/num_epochs) at each epoch. The loss is the 
     mean squared error of the difference between the estimated noise and the actual noise. 
 </p>
 
 <p>Here is the training curve after 20 epochs:</p>
-<img src="media/Screenshot 2024-11-20 at 10.40.17 PM.png" width="auto" height="400px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.40.17 PM.png" width="auto" height="400px" alt="church">
 
 
 <h3>2.3: Sampling from the UNet</h3>
 <p>To sample we use the algorithm below:</p>
-<img src="media/Screenshot 2024-11-20 at 10.37.35 PM.png" width="auto" height="200px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.37.35 PM.png" width="auto" height="200px" alt="church">
 <p>This matches our iterative procedure from part A. We start with a fully noisy image. At each timestep, we estimate a cleaner image 
     by subtracting the estimated noise from our model from the current noisy image. Then we set the 
     next iteration's noisy image to be the current clean estimate. We repeat this for every timestep. Note that 
@@ -369,11 +369,11 @@ the model was trying to render deer, but the details are a bit off.
 </p>
 
 <p>Here are results after 5 epochs:</p>
-<img src="media/Screenshot 2024-11-20 at 10.46.17 PM.png" width="auto" height="300px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.46.17 PM.png" width="auto" height="300px" alt="church">
 
 
 <p>Here are results after 20 epochs:</p>
-<img src="media/Screenshot 2024-11-20 at 10.39.28 PM.png" width="auto" height="300px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.39.28 PM.png" width="auto" height="300px" alt="church">
 <p>The results do resemble numbers, but some of them are completely illegible. In the 
     next part we find a way to make these generations better.
 </p>
@@ -385,16 +385,16 @@ the model was trying to render deer, but the details are a bit off.
     multiply. 
 </p>
 <p>The training algorithm is as follows:</p>
-<img src="media/Screenshot 2024-11-20 at 10.49.02 PM.png" width="auto" height="300px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.49.02 PM.png" width="auto" height="300px" alt="church">
 <p>Here's the training curve after 20 epochs:</p>
-<img src="media/Screenshot 2024-11-20 at 11.04.27 PM.png" width="auto" height="300px" alt="church">
+<img src="Screenshot 2024-11-20 at 11.04.27 PM.png" width="auto" height="300px" alt="church">
 
 <h3>2.5: Sampling from the Class-Conditioned UNet</h3>
 <p>Sampling is very similar to the time-conditioned case. The only difference is 
     that we add CFG as well as adding the actual class information into the model.
 </p>
 <p>Results after 5 epochs:</p>
-<img src="media/Screenshot 2024-11-20 at 10.52.39 PM.png" width="auto" height="300px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.52.39 PM.png" width="auto" height="300px" alt="church">
 
 <p>Results after 20 epochs:</p>
-<img src="media/Screenshot 2024-11-20 at 10.52.07 PM.png" width="auto" height="300px" alt="church">
+<img src="Screenshot 2024-11-20 at 10.52.07 PM.png" width="auto" height="300px" alt="church">
