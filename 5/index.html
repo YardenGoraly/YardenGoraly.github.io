@@ -1,0 +1,400 @@
+<h2>Project 5: Fun With Diffusion Models</h2>
+<h3>Yarden Goraly</h3>
+
+<h1>Part A:
+</h1>
+
+<h2>Part 0: Setup</h2>
+<p>Random seed for this project: 182</p>
+<br>
+<p>In this part we use the DeepFloyd IF text-to-image model. Below are some sample outputs from stage 1 and stage 2
+    of this model using the null prompt "a high quality photo". 
+    
+</p>
+<p>
+    Prompts: 
+    <br>
+    "an oil painting of a snowy mountain village"
+    <br>
+    "a man wearing a hat"
+    <br>
+    "a rocket ship"
+</p>
+<p>Stage 1 outputs (num_inference_steps = 10):</p>
+<img src="media/part0_small_n=20_78.jpg" width="auto" height="64px" alt="church">
+<img src="media/part0_small_n=20_51.jpg" width="auto" height="64px" alt="church">
+<img src="media/part0_small_n=20_53.jpg" width="auto" height="64px" alt="church">
+
+<p>Stage 2 outputs (num_inference_steps = 10):</p>
+<img src="media/part0_big_n=20_68.jpg" width="auto" height="200px" alt="church">
+<img src="media/part0_big_n=20_23.jpg" width="auto" height="200px" alt="church">
+<img src="media/part0_big_n=20_12.jpg" width="auto" height="200px" alt="church">
+
+<p>Stage 1 outputs (num_inference_steps = 200):</p>
+<img src="media/part0_small_n=200_95.jpg" width="auto" height="64px" alt="church">
+<img src="media/part0_small_n=200_68.jpg" width="auto" height="64px" alt="church">
+<img src="media/part0_small_n=200_93.jpg" width="auto" height="64px" alt="church">
+
+<p>Stage 1 outputs (num_inference_steps = 200):</p>
+<img src="media/part0_big_n=200_98.jpg" width="auto" height="200px" alt="church">
+<img src="media/part0_big_n=200_88.jpg" width="auto" height="200px" alt="church">
+<img src="media/part0_big_n=200_46.jpg" width="auto" height="200px" alt="church">
+
+<p>
+Discussion: <br>
+The results for both inference steps closely match the prompts. This model had a little bit of trouble
+making the snowy village look like an oil painting, but it does look mostly like a painting. 
+Ragarding differences betweein 20 vs 200 inferences steps, the outputs with more inference steps
+were on average more detailed and sharper. The rocket, for example, looks more close to a real rocket 
+drawing that someone would make with more inference steps. There is also more detail with the the sky.
+The animals in the snowy village picture for the 200 inference output do not look real. It was clear
+the model was trying to render deer, but the details are a bit off. 
+
+</p>
+
+<h2>Part 1: Sampling Loops</h2>
+<h3>1.1: Implementing the Forward Process</h3>
+<p>
+    Our first step to implement the diffusion loop is to create the forward process 
+    which adds noise to an image. For this we compute the following:
+</p>
+<img src="media/Screenshot2024-11-17at101742PM.png" width="auto" height="64px" alt="church">
+<p>
+    Where: <br>
+    -x_t is the noisy image <br>
+    -x_0 is the clean image <br>
+    -alpha_t_hat is the noise coefficient at time t <br>
+    This process not only adds noise to the image, but it also scales it.
+</p>
+<p>Below are results of the forward process on different levels of t.</p>
+<p>Original:</p>
+<img src="media/part1_1-4_12.jpg" width="auto" height="100px" alt="church">
+<p>t = 250:</p>
+<img src="media/part1_1-4_71.jpg" width="auto" height="100px" alt="church">
+<p>t = 500:</p>
+<img src="media/part1_1-4_61.jpg" width="auto" height="100px" alt="church">
+<p>t = 750:</p>
+<img src="media/part1_1-4_19.jpg" width="auto" height="100px" alt="church">
+<h3>1.2: Classical Denoising</h3>
+<p>Since noise is primarily made up of high frequencies, one way to denoise 
+    without learning is to remove the high requiencies from the image.
+    We achieve this by applying a gaussian filter to the image.
+</p>
+<p>Noisy t = 250:</p>
+<img src="media/part1_1-4_71.jpg" width="auto" height="100px" alt="church">
+<p>Smoothed t = 250:</p>
+<img src="media/part1_1-4_59.jpg" width="auto" height="100px" alt="church">
+<p>Noisy t = 500:</p>
+<img src="media/part1_1-4_61.jpg" width="auto" height="100px" alt="church">
+<p>Smoothed t = 500:</p>
+<img src="media/part1_1-4_69.jpg" width="auto" height="100px" alt="church">
+<p>Noisy t = 750:</p>
+<img src="media/part1_1-4_19.jpg" width="auto" height="100px" alt="church">
+<p>Smoothed t = 750:</p>
+<img src="media/part1_1-4_18.jpg" width="auto" height="100px" alt="church">
+<p>Clearly, this naive smoothing does not do a very good job. While the 
+    noise is smoothed out somewhat, the picture is also blurred, so we 
+    lose a lot of information. In the next step we will investigate a better way. 
+</p>
+<h3>1.3: One-Step Denoising</h3>
+<p>In this part we apply one-step denoising using a pretrained
+    UNet. This UNet was pretrained with tons of data comparing original and noisy images. Given a 
+    noisy image, the model finds an estimate for the noise. Then we estimate a clean image
+    by scaling this noise estimate using alphas_cumprod and subtracting it from our noisy image.
+</p>
+<p>Here's the original image for reference:</p>
+<p>Original:</p>
+<img src="media/part1_1-4_12.jpg" width="auto" height="100px" alt="church">
+<p>Noisy t = 250:</p>
+<img src="media/part1_1-4_71.jpg" width="auto" height="100px" alt="church">
+<p>Smoothed t = 250:</p>
+<img src="media/part1_1-4_8.jpg" width="auto" height="100px" alt="church">
+<p>Noisy t = 500:</p>
+<img src="media/part1_1-4_61.jpg" width="auto" height="100px" alt="church">
+<p>Smoothed t = 500:</p>
+<img src="media/part1_1-4_39.jpg" width="auto" height="100px" alt="church">
+<p>Noisy t = 750:</p>
+<img src="media/part1_1-4_19.jpg" width="auto" height="100px" alt="church">
+<p>Smoothed t = 750:</p>
+<img src="media/part1_1-4_86.jpg" width="auto" height="100px" alt="church">
+<h3>1.4: Iterative Denoising</h3>
+<p>Single-step denoising works pretty well. However, it turns out we can get better 
+    results by iteratively denoising an image. This involves remove a little bit of noise 
+    across multiple timesteps until we arrive at a clean image. In order to optimize this process,
+    we use strided timesteps in order to save time. Each iteration in this process, we estimate the 
+    noise from one step to the next and subtract just that. Eventually we arrive at our estimate of the 
+    clean image.
+</p>
+<p>Noisy Campanile t = 690:</p>
+<img src="media/iterative__449.jpg" width="auto" height="100px" alt="church">
+<p>Noisy Campanile t = 540:</p>
+<img src="media/iterative__94.jpg" width="auto" height="100px" alt="church">
+<p>Noisy Campanile t = 390:</p>
+<img src="media/iterative__275.jpg" width="auto" height="100px" alt="church">
+<p>Noisy Campanile t = 240:</p>
+<img src="media/iterative__330.jpg" width="auto" height="100px" alt="church">
+<p>Noisy Campanile t = 90:</p>
+<img src="media/iterative__278.jpg" width="auto" height="100px" alt="church">
+<p>Original Campanile:</p>
+<img src="media/part1_1-4_12.jpg" width="auto" height="100px" alt="church">
+<p>Iteratively Denoised Campanile:</p>
+<img src="media/iterative__160.jpg" width="auto" height="100px" alt="church">
+<p>One-step Denoised Campanile:</p>
+<img src="media/iterative__354.jpg" width="auto" height="100px" alt="church">
+<p>Gaussian Blurred Campanile:</p>
+<img src="media/iterative__21.jpg" width="auto" height="100px" alt="church">
+<h3>1.5: Diffusion Model Sampling</h3>
+<p>In this part we perform the same exact operations as the previous section, but 
+    this time we start with pure noise. That means we don't control what the output 
+    image will be, but the model will force the output to be in the high quality 
+    image manifold, making for interesting results.
+</p>
+<p>Below are five sampled images:</p>
+<img src="media/part1_5_130.jpg" width="auto" height="200px" alt="church">
+<img src="media/part1_5_30.jpg" width="auto" height="200px" alt="church">
+<img src="media/part1_5_153.jpg" width="auto" height="200px" alt="church">
+<img src="media/part1_5_243.jpg" width="auto" height="200px" alt="church">
+<img src="media/part1_5_358.jpg" width="auto" height="200px" alt="church">
+<p>We can see that some of these images look like they could be real, but 
+    some of them also look unconvincing. In the next part we'll work to improve these.
+</p>
+<h3>1.6: Classifier-Free Guidance (CFG)</h3>
+<p>In this part we try to guide our output image. We 
+    do this by computing a conditional and an unconditional noise estimate and allowing our new 
+    formula to be:
+</p>
+<img src="media/Screenshot2024-11-20at92659PM.png" width="auto" height="40px" alt="church">
+<p>Where epsilon_u and epsilon_c are the estimated noise for the unconditional prompt
+    and the conditional prompt respectively. Gamma is a hyperparameter that we can control. To get the conditional 
+    and unconditional estimates, we get the output of the UNet for both a given prompt and an empty prompt. With a gamma 
+    value greater than 1, we see increased quality for generated images. For this project I used gamma=7.
+    Below are five sampled images using CFG.
+</p>
+<img src="media/part1_6_23.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_6_255.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_6_316.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_6_387.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_6_416.jpg" width="auto" height="150px" alt="church">
+<p>Clearly these results are much higher quality when compared to section 1.5. </p>
+<h3>1.7: Image-to-image Translation</h3>
+<p>In this part we generate images in the same way we did in the previous part,
+    but this time starting at different noise levels following the SDEdit algorithm. What we see is a relatively 
+    smooth transition from a fully made up image to the Campanile, which is our inputed image.
+</p>
+<img src="media/part1_7_347.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_7_159.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_7_329.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_7_346.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_7_195.jpg" width="auto" height="150px" alt="church">
+<img src="media/part1_7_174.jpg" width="auto" height="150px" alt="church">
+<h3>1.7.1: Editing Hand-Drawn and Web Images</h3>
+<p>In this part, we apply the same steps as before, but on non-realistic images to see how 
+    the model transition into the real-image manifold.
+</p>
+<p>Spongebob:</p>
+<img src="media/Screenshot2024-11-20at110556PM.png" width="auto" height="150px" alt="church">
+
+<p>Drawing of a flute:</p>
+<img src="media/Screenshot2024-11-20at111239PM.png" width="auto" height="150px" alt="church">
+
+<p>Drawing of a baby:</p>
+<img src="media/Screenshot2024-11-20at111515PM.png" width="auto" height="150px" alt="church">
+
+
+<h3>1.7.2: Inpainting</h3>
+<p>In this part I implement inpainting, which is a way to mask out only a certain section of the 
+    image and allow the model to hallucinate something there. For example, we can create a mask
+    blocking the top of the Campanile and allow the model to replace it with something else.
+</p>
+<p>Campanile:</p>
+<img src="media/Screenshot2024-11-20at113032PM.png" width="auto" height="100px" alt="church">
+<img src="media/Screenshot2024-11-20at113103PM.png" width="auto" height="100px" alt="church">
+
+
+
+<p>Superman:</p>
+<img src="media/Screenshot2024-11-20at112846PM.png" width="auto" height="100px" alt="church">
+<img src="media/Screenshot2024-11-20at112943PM.png" width="auto" height="100px" alt="church">
+
+<p>Violinist:</p>
+<img src="media/Screenshot2024-11-20at113221PM.png" width="auto" height="100px" alt="church">
+<img src="media/Screenshot2024-11-20at11.32.51PM.png" width="auto" height="100px" alt="church">
+
+<h3>1.7.3: Text-Conditional Image-to-image Translation</h3>
+<p>In this part we do the same as before, but with a text prompt other than "a high quality image" for the conditional prompt. 
+    We see that the progression of images is consistent to the prompt and to each other.
+</p>
+
+<p>Prompt: "a rocket ship"</p>
+<img src="media/Screenshot2024-11-20at114312PM.png" width="auto" height="100px" alt="church">
+
+<p>Promp: "a photo of a dog"</p>
+<img src="media/Screenshot2024-11-20at114220PM.png" width="auto" height="100px" alt="church">
+
+<p>Prompt: "a pencil"</p>
+<img src="media/Screenshot2024-11-20at114110PM.png" width="auto" height="100px" alt="church">
+
+<h3>1.8: Visual Anagrams</h3>
+<p>In this part, we make the model generate two images at the same time with one of them being 
+    flipped. Combining their noise profiles, we're able to generate images that are anagrams. The 
+    formula is as follows:
+</p>
+<img src="media/Screenshot2024-11-20at114504PM.png" width="auto" height="200px" alt="church">
+<p>Essentially we run our iterative CFG method as before, but with two images at the same time. One of the images
+    is flipped then fed into the model to get a flipped noise estimate. Once we average the noise estimates
+    from the outputs of each model we can feed the estimated clean image to the next iteration.
+</p>
+
+<p>"an oil painting of people around a campfire" and "an oil painting of an old man"</p>
+<img src="media/Screenshot2024-11-20at114651PM.png" width="auto" height="200px" alt="church">
+<img src="media/Screenshot2024-11-20at114651PM.png" style="transform: scaleY(-1)" width="auto" height="200px" alt="church">
+
+
+<p>"a lithograph of waterfalls" and "a photo of a dog"</p>
+<img src="media/Screenshot2024-11-20at114906PM.png" width="auto" height="200px" alt="church">
+<img src="media/Screenshot2024-11-20at114906PM.png" style="transform: scaleY(-1)" width="auto" height="200px" alt="church">
+
+
+<p>"an oil painting of a snowy mountain village" and "a lithograph of a skull"</p>
+<img src="media/Screenshot2024-11-20at115339PM.png" width="auto" height="200px" alt="church">
+<img src="media/Screenshot2024-11-20at115339PM.png" style="transform: scaleY(-1)"width="auto" height="200px" alt="church">
+
+
+<h3>1.9: Hybrid Images</h3>
+<p>In this part we create hybrid images, like in project 2. A hybrid image is one that displays one image 
+    when viewed up close, and a different image when viewed from a far. We do this by applying a lowpass 
+    filter to the noise estimate of one of the images, and applying a highpass filter to the other. The method
+    here is very similar to the previous part, with our model finding the noise for two images at the same time, and 
+    then the final noise estimate is the sum of the low-passed first image and high-passed second image.
+</p>
+<p>Prompts: "a lithograph of waterfalls" and "a lithograph of a skull"</p>
+<img src="media/Screenshot2024-11-20at115800PM.png" width="auto" height="100px" alt="church">
+
+<p>Prompts: "a rocket ship" and "a photo of a hipster barista"</p>
+<img src="media/Screenshot2024-11-21at13553AM.png" width="auto" height="100px" alt="church">
+
+<p>Prompts: "a man wearing a hat" and "a lithograph of a fjord"</p>
+<img src="media/Screenshot2024-11-21at14029AM.png" width="auto" height="100px" alt="church">
+
+
+
+
+<h1>Part B: Diffusion Models from Scratch</h1>
+<h2>Part 1: Training the UNet</h2>
+<h3>1.1: Implementing the UNet</h3>
+<p>In this part I implemented the UNet as per the spec:</p>
+<img src="media/Screenshot2024-11-20at94756PM.png" width="auto" height="400px" alt="church">
+<p>Where some of the operations are detailed below:</p>
+<img src="media/Screenshot2024-11-20at94845PM.png" width="auto" height="400px" alt="church">
+<h3>1.2: Using the UNet to Traing a Denoiser</h3>
+<p>In this part I visualize the forward process of different images at different levels of sigma.
+    Below, for each number, I show the noise progression from sigma = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]
+    from left to right.
+</p>
+<img src="media/Screenshot2024-11-20at95515PM.png" width="auto" height="100px" alt="church">
+<br>
+<img src="media/Screenshot2024-11-20at95529PM.png" width="auto" height="100px" alt="church">
+<br>
+<img src="media/Screenshot2024-11-20at95551PM.png" width="auto" height="100px" alt="church">
+<br>
+<br>
+<img src="media/Screenshot2024-11-20at95601PM.png" width="auto" height="100px" alt="church">
+<br>
+<img src="media/Screenshot2024-11-20at95611PM.png" width="auto" height="100px" alt="church">
+<h3>1.2.1: Training</h3>
+<p>Now we actually train the UNet to denoise MNIST images. We train the model 
+    to denoise images with only noise level sigma=0.5. I used a batch size of 256 and a learning
+    rate of 0.0001 using the Adam optimizer. To calculate the loss, I used mean squared error 
+    on the difference between the output of our model to a clean image. The hidden dimension was 128. Below is a training
+    loss curve for five epochs:
+</p>
+<img src="media/Screenshot2024-11-20at101923PM.png" width="auto" height="400px" alt="church">
+<p>Here are results after one epoch:</p>
+<p>Input images:</p>
+<img src="media/Screenshot2024-11-20at101433PM.png" width="auto" height="100px" alt="church">
+<p>Noisy images:</p>
+<img src="media/Screenshot2024-11-20at101536PM.png" width="auto" height="100px" alt="church">
+<p>Denoised:</p>
+<img src="media/Screenshot2024-11-20at101611PM.png" width="auto" height="100px" alt="church">
+
+<p>Here are results after five epochs:</p>
+<p>Input images:</p>
+<img src="media/Screenshot2024-11-20at102014PM.png" width="auto" height="100px" alt="church">
+<p>Noisy images:</p>
+<img src="media/Screenshot2024-11-20at102047PM.png" width="auto" height="100px" alt="church">
+<p>Denoised:</p>
+<img src="media/Screenshot2024-11-20at102110 PM.png" width="auto" height="100px" alt="church">
+<p>We see that after five epochs, there is more noise removed and the numbers are clearer</p>
+
+
+<h3>1.2.2: Out-of-Distribution Testing</h3>
+<p>Here we test our denoising on other levels of sigma besides 0.5.</p>
+<p>From left to right are results at sigma (noise) levels [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]</p>
+<img src="media/Screenshot2024-11-20at102250PM.png" width="auto" height="100px" alt="church">
+<br>
+<img src="media/Screenshot2024-11-20at102356PM.png" width="auto" height="100px" alt="church">
+
+<h2>Part 2: Training a Diffusion Model</h2>
+<p>In this part I train a diffusion model that generates new MNIST images from random noise.</p>
+<p>In this part I implemented DDPM. The loss function for this part is the mean squared 
+    error between the estimated noise and the actual noise. In order for this to work, we need 
+    some sort of notion of time in our model. This is because the forward process relies on 
+    constants, alpha_bars that depend on time. In order to incorporate time, we use fully connected layers
+    and add them into our original model. This effectively injects our scalar time, t, into model, 
+    allowing for it to learn how to parameterize a time encoding. Below are the diagrams for the modified network.
+</p>
+<img src="media/Screenshot2024-11-20at103027PM.png" width="auto" height="400px" alt="church">
+<p>Where the structure of an FCBlock is below:</p>
+<img src="media/Screenshot2024-11-20at103112PM.png" width="auto" height="150px" alt="church">
+
+<h3>2.2: Training the UNet</h3>
+<p>In order to train the UNet we use the algorithm below:</p>
+<img src="media/Screenshot2024-11-20at103353PM.png" width="auto" height="200px" alt="church">
+<p>In training, I used a batch size of 128 and a hidden dimension of 64. The learning rate was 0.001
+    with a learning rate scheduler, decaying the rate by 1.0^(1.0/num_epochs) at each epoch. The loss is the 
+    mean squared error of the difference between the estimated noise and the actual noise. 
+</p>
+
+<p>Here is the training curve after 20 epochs:</p>
+<img src="media/Screenshot2024-11-20at104017PM.png" width="auto" height="400px" alt="church">
+
+
+<h3>2.3: Sampling from the UNet</h3>
+<p>To sample we use the algorithm below:</p>
+<img src="media/Screenshot2024-11-20at103735PM.png" width="auto" height="200px" alt="church">
+<p>This matches our iterative procedure from part A. We start with a fully noisy image. At each timestep, we estimate a cleaner image 
+    by subtracting the estimated noise from our model from the current noisy image. Then we set the 
+    next iteration's noisy image to be the current clean estimate. We repeat this for every timestep. Note that 
+    the alphas, alpha_bars, and betas are precomputed. 
+</p>
+
+<p>Here are results after 5 epochs:</p>
+<img src="media/Screenshot2024-11-20at104617PM.png" width="auto" height="300px" alt="church">
+
+
+<p>Here are results after 20 epochs:</p>
+<img src="media/Screenshot2024-11-20at103928PM.png" width="auto" height="300px" alt="church">
+<p>The results do resemble numbers, but some of them are completely illegible. In the 
+    next part we find a way to make these generations better.
+</p>
+
+<h3>2.4: Adding Class-Conditioning to UNet</h3>
+<p>In order to improve our generated images, we can add class-conditioning to the model. 
+    To do this, we one-hot-encode the class of a datapoint into the model and use an FCBlock to integrate
+    it into the model. Whereas before we added the time-conditioning to the desired block, with class-conditioning, we 
+    multiply. 
+</p>
+<p>The training algorithm is as follows:</p>
+<img src="media/Screenshot2024-11-20at104902PM.png" width="auto" height="300px" alt="church">
+<p>Here's the training curve after 20 epochs:</p>
+<img src="media/Screenshot2024-11-20at110427PM.png" width="auto" height="300px" alt="church">
+
+<h3>2.5: Sampling from the Class-Conditioned UNet</h3>
+<p>Sampling is very similar to the time-conditioned case. The only difference is 
+    that we add CFG as well as adding the actual class information into the model.
+</p>
+<p>Results after 5 epochs:</p>
+<img src="media/Screenshot2024-11-20at105239PM.png" width="auto" height="300px" alt="church">
+
+<p>Results after 20 epochs:</p>
+<img src="media/Screenshot2024-11-20at105207PM.png" width="auto" height="300px" alt="church">
